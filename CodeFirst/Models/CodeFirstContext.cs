@@ -8,6 +8,7 @@ namespace CodeFirst.Models
         public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Prescription> Prescription { get; set; }
         public DbSet<Medicament> Medicament { get; set; }
+        public DbSet<PrescriptionMedicament> PrescriptionMedicament { get; set; }
 
         public CodeFirstContext(DbContextOptions<CodeFirstContext> options) : base(options) { }
 
@@ -23,7 +24,6 @@ namespace CodeFirst.Models
                 entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
 
                 entity.Property(e => e.Birthdate).HasColumnType("date").IsRequired();
-
             });
 
             modelBuilder.Entity<Doctor>(entity =>
@@ -58,7 +58,6 @@ namespace CodeFirst.Models
                     .HasForeignKey(d => d.IdDoctor)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Prescription_Doctor");
-
             });
 
             modelBuilder.Entity<Medicament>(entity =>
@@ -73,6 +72,28 @@ namespace CodeFirst.Models
                 entity.Property(e => e.Type).HasMaxLength(100).IsRequired();
             });
 
+            modelBuilder.Entity<PrescriptionMedicament>(entity =>
+            {
+                entity.ToTable("Prescription_Medicament");
+
+                entity.HasKey(e => new {e.IdPrescription, e.IdMedicament});
+
+                entity.Property(e => e.Dose).IsRequired();
+
+                entity.Property(e => e.Details).HasMaxLength(100).IsRequired();
+
+                entity.HasOne(p => p.Prescription)
+                    .WithMany(p => p.PrescriptionMedicaments)
+                    .HasForeignKey(p => p.IdPrescription)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("PrescriptionMedicament_Prescription");
+
+                entity.HasOne(m => m.Medicament)
+                    .WithMany(p => p.PrescriptionMedicaments)
+                    .HasForeignKey(m => m.IdMedicament)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("PrescriptionMedicament_Medicament");
+            });
         }
 
     }
