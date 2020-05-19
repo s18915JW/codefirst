@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 
 namespace CodeFirst.Models
 {
@@ -94,6 +96,46 @@ namespace CodeFirst.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("PrescriptionMedicament_Medicament");
             });
+
+            Seed(modelBuilder);
+        }
+
+        protected void Seed(ModelBuilder modelBuilder)
+        {
+            var doctors = new List<Doctor>
+            {
+                new Doctor { IdDoctor = 1, FirstName = "Jan", LastName = "Jankowski", Email = "jj@mail.com" },
+                new Doctor { IdDoctor = 2, FirstName = "Maciej", LastName = "Maciejewski", Email = "mm@mail.com" }
+            };
+            modelBuilder.Entity<Doctor>().HasData(doctors);
+
+            var patients = new List<Patient>
+            {
+                new Patient { IdPatient = 1, FirstName = "Bożydar", LastName = "Bożydarowicz", Birthdate = DateTime.Parse("1970-01-01")},
+                new Patient { IdPatient = 2, FirstName = "Stanisław", LastName = "Stanisławowicz", Birthdate = DateTime.Parse("1980-02-02")},
+            };
+            modelBuilder.Entity<Patient>().HasData(patients);
+
+            var meds = new List<Medicament>
+            {
+                new Medicament { IdMedicament = 1, Name = "Ibuprom", Description = "Działanie przeciwbólowe",  Type = "Przeciwzapalny"},
+                new Medicament { IdMedicament = 2, Name = "Zyrtec", Description = "Działanie przeciwzapalnie",  Type = "Przeciwalergiczny"},
+            };
+            modelBuilder.Entity<Medicament>().HasData(meds);
+
+            var prescriptions = new List<Prescription>
+            {
+                new Prescription { IdPrescription = 1, Date = DateTime.Parse("2010-01-01"), DueDate = DateTime.Parse("2010-02-02"), IdPatient = 1, IdDoctor = 1},
+                new Prescription { IdPrescription = 2, Date = DateTime.Parse("2011-03-03"), DueDate = DateTime.Parse("2011-04-04"), IdPatient = 2, IdDoctor = 2},
+            };
+            modelBuilder.Entity<Prescription>().HasData(prescriptions);
+
+            var pres_meds = new List<PrescriptionMedicament>()
+            {
+                new PrescriptionMedicament { IdMedicament = 1, IdPrescription = 1, Dose = 200, Details = "1/dzień"},
+                new PrescriptionMedicament { IdMedicament = 2, IdPrescription = 2, Dose = 20, Details = "1/dzień"},
+            };
+            modelBuilder.Entity<PrescriptionMedicament>().HasData(pres_meds);
         }
 
     }
