@@ -5,7 +5,9 @@ namespace CodeFirst.Models
     public class CodeFirstContext : DbContext
     {
         public DbSet<Patient> Patient { get; set; }
+        public DbSet<Doctor> Doctor { get; set; }
         public DbSet<Prescription> Prescription { get; set; }
+        public DbSet<Medicament> Medicament { get; set; }
 
         public CodeFirstContext(DbContextOptions<CodeFirstContext> options) : base(options) { }
 
@@ -24,6 +26,18 @@ namespace CodeFirst.Models
 
             });
 
+            modelBuilder.Entity<Doctor>(entity =>
+            {
+                entity.HasKey(e => e.IdDoctor).HasName("Doctor_pk");
+                // entity.Property(e => e.IdPatient).ValueGeneratedNever();    
+
+                entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
+
+                entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
+
+                entity.Property(e => e.Email).HasMaxLength(100).IsRequired();
+            });
+
             modelBuilder.Entity<Prescription>(entity =>
             {
                 entity.HasKey(e => e.IdPrescription).HasName("Prescription_pk");
@@ -36,10 +50,27 @@ namespace CodeFirst.Models
                 entity.HasOne(p => p.Patient)
                     .WithMany(p => p.Prescriptions)
                     .HasForeignKey(p => p.IdPatient)
-                    .OnDelete(DeleteBehavior.ClientSetNull)    // sami chcemy usuwać związki od góry
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Prescription_Patient");
 
+                entity.HasOne(d => d.Doctor)
+                    .WithMany(p => p.Prescriptions)
+                    .HasForeignKey(d => d.IdDoctor)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Prescription_Doctor");
 
+            });
+
+            modelBuilder.Entity<Medicament>(entity =>
+            {
+                entity.HasKey(e => e.IdMedicament).HasName("Medicament_pk");
+                // entity.Property(e => e.IdPatient).ValueGeneratedNever();    
+
+                entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
+
+                entity.Property(e => e.Description).HasMaxLength(100).IsRequired();
+
+                entity.Property(e => e.Type).HasMaxLength(100).IsRequired();
             });
 
         }

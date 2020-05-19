@@ -4,14 +4,16 @@ using CodeFirst.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CodeFirst.Migrations
 {
     [DbContext(typeof(CodeFirstContext))]
-    partial class CodeFirstContextModelSnapshot : ModelSnapshot
+    [Migration("20200519161902_AddedDoctorTable")]
+    partial class AddedDoctorTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,34 +47,6 @@ namespace CodeFirst.Migrations
                         .HasName("Doctor_pk");
 
                     b.ToTable("Doctor");
-                });
-
-            modelBuilder.Entity("CodeFirst.Models.Medicament", b =>
-                {
-                    b.Property<int>("IdMedicament")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("IdMedicament")
-                        .HasName("Medicament_pk");
-
-                    b.ToTable("Medicament");
                 });
 
             modelBuilder.Entity("CodeFirst.Models.Patient", b =>
