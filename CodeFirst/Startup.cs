@@ -1,4 +1,5 @@
 using CodeFirst.Models;
+using CodeFirst.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace CodeFirst
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IDbService, EfDbService>();
             services.AddDbContext<CodeFirstContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("CodeFirstDbContext"));
